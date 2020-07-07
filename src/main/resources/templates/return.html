@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title>return</title>
+        <th:block th:insert="~{index :: head/script}"></th:block>
+		<th:block th:insert="~{index :: head/link}"></th:block>
+		<script src="/js/main.js"></script>
+    </head>
+    <body>
+    	<div class="container">
+		   	<th:block  th:insert="~{index :: navbar}"></th:block>
+		   	<div class="col-sm-12" style="display: inline-flex;">
+			   	<h2 class="col-sm-8" style="margin-top: 0px;">返却画面</h2>
+				<div class="col-sm-4"style="padding-right: 0px;"><a href="/logout" style="float: right;">ログアウト</a></div>
+		   	</div>
+			<!-- --- -->
+			<div class="col-sm-12"><a href="/menu" style="float: right;">戻る</a></div>
+<!-- 			<h4 th:utext="${msg}"></h4> -->
+			<form id="form" action="/bookreturn/searchmember">
+				<!-- id search-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員ID：</label>
+<!-- 				       	<input class="form-control" id="memberId" name="memberId" maxlength="4"/> -->
+		       			<input class="form-control" th:field="${returnForm.memberId}" maxlength="4"/>
+					</div>
+			      	<div class="col-sm-3" style="margin-top:24px;">
+			      		<button id="btnSearchMember" class="btn btn-primary" style="width: 120px">検索</button>
+			      	</div>
+				</div>
+			</form>
+			<div class="col-sm-12" style="margin-top: 20px;">
+				<div class="col-sm-12"><label for="tblLendings">貸出一覧：</label></div>
+				<div class="col-sm-12">
+					<table id="tblLendings" class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="col-sm-1">返却</th>
+								<th class="col-sm-5">本ID</th>
+								<th class="col-sm-6">本タイトル</th>
+							</tr>
+						</thead>
+						<tbody th:if="${returnForm.books}">
+						<th:block th:each="book, state : ${returnForm.books}">
+							<tr th:id="${'raw' + state.index}">
+								<td><input type="checkbox"></td>
+								<td class="book_id" th:text="${book.bookId}"></td>
+								<td th:utext="${book.bookTitle}"></td>
+							</tr>
+						</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<div class="col-sm-12">
+					<th:block class="col-sm-12" th:if="${button}" th:utext="${button}"></th:block>
+				</div>
+			</div>
+    	</div>
+    </body>
+	<script type="text/javascript">
+		var msg = "[[${msg}]]";
+	 	if(msg != ""){
+	 		alert(msg);
+	 	}
+	 	
+		function send(){
+			var idList = new Array();
+			
+			$('#tblLendings input[type=checkbox]:checked').each(function() {
+			    var bookId = $(this).parent().parent().find("td").eq(1).html();
+			    idList.push(bookId);
+			});
+			if(idList.length == 0){
+				alert("返却する本が選択されていません。");
+			}else{
+				var memberId = $('#memberId').val();
+				location.href = '/bookreturn/return?memberId=' + memberId +'&bookIds=' + idList;
+			}
+		}
+
+		$(document).ready(function(){
+			$('#btnSearchMember').click(function(event){
+				var memberId = $('#memberId').val();
+				var msg = null;
+				if(memberId == ''){
+					msg = "会員IDを入力してください。";
+				}else if(checkInputIsAlphanumeric(memberId) == false){
+					msg = "会員IDは半角英数字で入力してください。";
+				}
+				
+				if(msg != null){
+					alert(msg);
+					event.preventDefault();
+				}else{
+					$('#form').submit();
+				}
+			})
+		});
+	</script>
+</html>

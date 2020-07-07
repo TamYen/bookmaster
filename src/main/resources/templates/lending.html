@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>menu</title>
+        <th:block th:insert="~{index :: head/script}"></th:block>
+		<th:block th:insert="~{index :: head/link}"></th:block>
+		<script src="js/main.js"></script>
+    </head>
+    <body>
+    	<div class="container">
+		   	<th:block  th:insert="~{index :: navbar}"></th:block>
+		   	<div class="col-sm-12" style="display: inline-flex;">
+			   	<h2 class="col-sm-8" style="margin-top: 0px;">貸出画面</h2>
+				<div class="col-sm-4"style="padding-right: 0px;"><a href="/logout" style="float: right;">ログアウト</a></div>
+		   	</div>
+<!-- --- -->
+			<div class="col-sm-12"><a href="/menu" style="float: right;">戻る</a></div>
+			<h4 th:utext="${msg}"></h4>
+			<form id="form">
+			<!-- id search-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>本ID ：</label>
+				       	<input th:field="${lendingForm.bookId}" class="form-control" maxlength="4"/>
+					</div>
+				      	<div class="col-sm-3" style="margin-top:24px;">
+				      		<button id="btnSearchBook" class="btn btn-primary" style="width: 120px">検索</button>
+				      	</div>
+				</div>
+			<!-- 本タイトル： -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-12">
+						<label>本タイトル：</label>
+			        	<input th:value="${lendingForm.bookTitle}" class="form-control" maxlength="40" disabled/>
+					</div>
+                </div>
+            <!-- 会員ID, 貸出-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員ID ：</label>
+				       	<input th:field="${lendingForm.memberId}" class="form-control" maxlength="4" />
+					</div>
+			      	<div class="col-sm-1" style="margin-top:24px; float: right;">
+			      		<button id="btnLend" class="btn btn-primary" style="width: 120px; float: right;">貸出</button>
+			      	</div>
+				</div>
+			</form>
+    	</div>
+    </body>
+	<script type="text/javascript">
+		var msg = "[[${msg}]]";
+	 	if(msg != ""){
+	 		alert(msg);
+	 	}
+
+		$(document).ready(function(){
+			$('#btnSearchBook').click(function(event){
+				if($('#bookId').val() == ''){
+					alert("本ID を入力してください。");
+					event.preventDefault();
+				}else if(checkInputIsAlphanumeric($('#bookId').val()) == false){
+					alert("本IDは半角英数字で入力してください。");
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/checkbook');
+					$('#form').submit();
+				}
+			});
+			
+			
+			$('#btnLend').click(function(event){
+				if($('#bookId').val() == ''){
+					alert("本ID を入力してください。");
+					event.preventDefault();
+				}else if(checkInputIsAlphanumeric($('#bookId').val()) == false){
+					alert("本IDは半角英数字で入力してください。");
+					event.preventDefault();
+				}else if($('#memberId').val() == ''){
+					alert("会員ID を入力してください。");
+					event.preventDefault();
+				}else if(checkInputIsAlphanumeric($('#memberId').val()) == false){
+					alert("会員IDは半角英数字で入力してください。");
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/lend');
+					$('#form').submit();
+				}
+			});
+		});
+	</script>
+</html>

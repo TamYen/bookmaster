@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title></title>
+        <th:block th:insert="~{index :: head/script}"></th:block>
+		<th:block th:insert="~{index :: head/link}"></th:block>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+    	<div class="container">
+		   	<th:block  th:insert="~{index :: navbar}"></th:block>
+		   	<div class="col-sm-12" style="display: inline-flex;">
+			   	<h2 class="col-sm-8" style="margin-top: 0px;">会員マスタメンテ</h2>
+				<div class="col-sm-4"style="padding-right: 0px;"><a href="#" style="float: right;">ログアウト</a></div>
+		   	</div>
+<!-- --- -->
+			<div class="col-sm-12"><a href="/membermaster" style="float: right;">戻る</a></div>
+			<h4 th:utext="${msg}"></h4>
+			
+			<div >
+			<!-- id -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員ID：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.memberId}"></label>
+					</div>
+				</div>
+			<!-- family name-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員氏(漢字)：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.familyName}"></label>
+					</div>
+					<div class="col-sm-5">
+						<label>会員氏(カナ)：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.familyNameKana}"></label>
+					</div>
+				</div>
+			<!-- first name-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員名(漢字)：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.firstName}"></label>
+					</div>
+					<div class="col-sm-5" style="padding-top: 10px;">
+						<label>会員名(カナ)：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.firstNameKana}"></label>
+					</div>
+				</div>
+			<!-- address -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-12">
+						<label>住所：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.address}"></label>
+					</div>
+				</div>
+			<!-- birthday -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-12">
+						<label>生年月日(西暦)：</label> <br>
+						<label style="font-size: x-large;" th:text="${memberForm.birthYear + '年' + memberForm.birthMonth + '月' + memberForm.birthDate + '日'}"></label>
+                    </div>
+				</div>
+			<!-- action -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div style="float: right;" th:utext="${button}">
+						
+					</div>
+					<form method="get" id="form"></form>
+				</div>
+			</div>
+    	</div>
+    </body>
+	<script type="text/javascript">
+		var msg = "[[${msg}]]";
+	 	if(msg != ""){
+	 		alert(msg);
+	 	}
+
+		function checkInputIsNumber(text){
+			var regex = /^[0-9]+$/;
+			if(text.match(regex) == null)
+				return false;
+			return true;
+		}
+
+		$(document).ready(function(){
+			$('#addMember').click(function(event){
+				if (confirm('登録します。よろしいですか？')) {
+					$('#form').attr('action', '/addmember');
+					$('#form').submit();
+				} else {
+					event.preventDefault();
+				}
+			});
+			
+			$('#updateMember').click(function(event){
+				if (confirm('updateします。よろしいですか？')) {
+					$('#form').attr('action', '/updatemember');
+					$('#form').submit();
+				} else {
+					event.preventDefault();
+				}
+			});
+			
+			$('#deleteMember').click(function(event){
+				if (confirm('deleteします。よろしいですか？')) {
+					$('#form').attr('action', '/deletemember');
+					$('#form').submit();
+				} else {
+					event.preventDefault();
+				}
+			});
+			
+			$('#searchMember').click(function(event){
+				if($('#memberId').val() == ''){
+					alert("会員ID を入力してください。");
+					event.preventDefault();
+				}else if(checkInputIsAlphanumeric($('#memberId').val()) == false){
+					alert("会員IDは半角英数字で入力してください。");
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/searchmember');
+					$('#form').submit();
+				}
+			});
+			
+			$('clear').click(function(event){
+				$("#form").reset();
+			});
+		});
+	</script>
+</html>

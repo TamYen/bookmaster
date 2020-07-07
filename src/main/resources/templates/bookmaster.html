@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>本マスタ</title>
+<script th:src="@{/js/main.js}"></script>
+</head>
+<body>
+ <div id="content" style="text-align: -webkit-center;">
+
+    <div>
+        <table style="padding: 15px 30px 15px 30px;border: groove;text-align: left;">
+            <tr>
+                <td style="display: inline-flex;">
+	                <h2 style="margin-top: 0px; margin-right: 227px;">本マスタメンテ</h2>
+	                <a href="" onclick="closeCurrentWindow()">閉じる</a>
+	            </td>
+            </tr>
+            <tr><td style="color: red;" th:if="${msg}" th:utext="${msg}"></td></tr>
+            <tr><td style="padding-top: 16px;">本ID:</td></tr>
+            <tr>
+                <td>
+                    <input style="font-size: inherit; ime-mode: disabled;width: 140px;height: 30px;" type="text" id="txtID" maxlength="4" th:if="${book}" th:value="${book.bookId}">
+                    <input style="font-size: inherit; ime-mode: disabled;width: 140px;height: 30px;" type="text" id="txtID" maxlength="4" th:if="${idBook}" th:value="${idBook}">
+                    <input style="font-size: inherit; ime-mode: disabled;width: 140px;height: 30px;" type="text" id="txtID" maxlength="4" th:if="${idBook == null && book==null}" value="">
+                    <button style="margin-left: 30px;width: 90px;height: 36px;font-size: medium;" onclick="btnSearch()">検索</button>
+                </td>                
+            </tr>
+            <!--  -->
+            <tr><td style="padding-top: 16px;">本タイトル：</td></tr>
+            <tr><td>
+            	<input style="font-size: inherit; width: 440px;height: 32px;" type="text" id="txtTitle" maxlength="40" th:if="${book}" th:value="${book.bookTitle}">
+            	<input style="font-size: inherit; width: 440px;height: 32px;" type="text" id="txtTitle" maxlength="40" th:if="${book == null}" value="">
+            </td></tr>
+            <!--  -->
+            <tr><td style="padding-top: 16px;">著者名：</td></tr>
+            <tr><td>
+            	<input style="font-size: inherit; width: 440px;height: 32px;" type="text" id="txtAuthor" maxlength="40" th:if="${book}" th:value="${book.authorName}">
+            	<input style="font-size: inherit; width: 440px;height: 32px;" type="text" id="txtAuthor" maxlength="40" th:if="${book == null}" value="">
+            </td></tr>
+            <!--  -->
+            <tr><td style="padding-top: 16px;">出版社：</td></tr>
+            <tr><td>
+            	<input style="font-size: inherit; width: 440px;height: 32px;" type="text" id="txtPublisher" maxlength="40" th:if="${book}" th:value="${book.publisher}">
+            	<input style="font-size: inherit; width: 440px;height: 32px;" type="text" id="txtPublisher" maxlength="40" th:if="${book == null}" value="">
+            </td></tr>
+            <!--  -->
+            <tr><td style="padding-top: 16px;">出版年月日：</td></tr>
+            <tr>
+                <td th:if="${book}">
+                    <input style="font-size: inherit; ime-mode: disabled; height: 32px; width: 75px;" type="text" name="" id="txtYear" maxlength="4" th:value="${#strings.substring(book.publicationDay, 0, 4)}"> 年
+                    <input style="font-size: inherit; ime-mode: disabled; height: 32px; width: 60px;" type="text" name="" id="txtMonth" maxlength="2" th:value="${#strings.substring(book.publicationDay, 5, 7)}"> 月
+                    <input style="font-size: inherit; ime-mode: disabled; height: 32px; width: 60px;" type="text" name="" id="txtDate" maxlength="2" th:value="${#strings.substring(book.publicationDay, 8, 10)}"> 日
+                </td>
+                <td th:if="${book == null}">
+                    <input style="font-size: inherit; ime-mode: disabled; height: 32px; width: 75px;" type="text" name="" id="txtYear" maxlength="4"> 年
+                    <input style="font-size: inherit; ime-mode: disabled; height: 32px; width: 60px;" type="text" name="" id="txtMonth" maxlength="2"> 月
+                    <input style="font-size: inherit; ime-mode: disabled; height: 32px; width: 60px;" type="text" name="" id="txtDate" maxlength="2"> 日
+                </td>
+            </tr>
+            <tr id="action">
+                <td style="padding-top: 32px;float: right;">
+                    <button style="height: 32px; width: 75px; margin-right: 15px; font-size: medium;" id="btnAdd" onclick="btnAdd()">追加</button>
+                    <button style="height: 32px; width: 75px; margin-right: 15px; font-size: medium;" id="btnUpdate" onclick="btnUpdate()">更新</button>
+                    <button style="height: 32px; width: 75px; margin-right: 15px; font-size: medium;" id="btnDelete" onclick="btnDelete()">削除</button>
+                    <button style="height: 32px; width: 75px; font-size: medium;" id="btnClear" onclick="btnClear()">クリア</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+ </div>
+ <script>
+ 	var msg = "[[${msg}]]";
+ 	if(msg != ""){
+ 		alert(msg);
+ 	}
+ 	function btnSearch(){
+ 		checkID();
+ 		if(idBook != null){
+ 			document.getElementById('idToSearch').value = idBook;
+ 			document.getElementById('searchForm').submit();
+ 		}
+ 	}
+     function btnAdd(){
+        checkID();
+        checkTitle();
+        checkPublisher();
+        checkAuthor();
+        checkYear();
+        checkMonth();
+        checkDate();
+
+        if(idBook==null || titleBook==null || authorBook==null || publisherBook==null || yearBook==null || monthBook==null || dateBook==null)
+            console.log("data invalid");
+        else{
+        	console.log(idBook);
+            document.getElementById('newId').value = idBook;
+            document.getElementById('newTitle').value = titleBook;
+            document.getElementById('newAuthor').value = authorBook;
+            document.getElementById('newPublisher').value = publisherBook;
+            document.getElementById('newYear').value = yearBook;
+            document.getElementById('newMonth').value = monthBook;
+            document.getElementById('newDate').value = dateBook;
+//             document.getElementById('newPublicDate').value = yearBook + "-" + monthBook + "-" + dateBook;
+            
+            document.getElementById('addForm').submit();
+        }
+     }
+     
+	function btnUpdate(){
+	     checkID();
+	     checkTitle();
+	     checkPublisher();
+	     checkAuthor();
+	     checkYear();
+	     checkMonth();
+	     checkDate();
+	
+	     if(idBook==null || titleBook==null || authorBook==null || publisherBook==null || yearBook==null || monthBook==null || dateBook==null)
+	         console.log("data invalid");
+	     else{
+	     	console.log(idBook);
+	         document.getElementById('updateId').value = idBook;
+	         document.getElementById('updateTitle').value = titleBook;
+	         document.getElementById('updateAuthor').value = authorBook;
+	         document.getElementById('updatePublisher').value = publisherBook;
+	         document.getElementById('updateYear').value = yearBook;
+	         document.getElementById('updateMonth').value = monthBook;
+	         document.getElementById('updateDate').value = dateBook;
+// 	         document.getElementById('updatePublicDate').value = yearBook + "-" + monthBook + "-" + dateBook;
+
+	         document.getElementById("updateForm").action = "http://localhost:8080/book/" + idBook;
+	         document.getElementById('updateForm').submit();
+	     }
+	  }
+	
+	function btnDelete(){
+		checkID();
+		if(idBook != null){
+ 			document.getElementById('idToDelete').value = idBook; 			
+ 			document.getElementById('deleteForm').action = "http://localhost:8080/book/"+idBook;
+ 			document.getElementById('deleteForm').submit();
+ 		}
+		
+	}
+ </script>
+ <form id="addForm" action="http://localhost:8080/book" method="post">
+    <input type="hidden" id="newId" name="newId">
+    <input type="hidden" id="newTitle" name="newTitle">
+    <input type="hidden" id="newPublisher" name="newPublisher">
+    <input type="hidden" id="newAuthor" name="newAuthor">
+    <input type="hidden" id="newYear" name="newYear">
+    <input type="hidden" id="newMonth" name="newMonth">
+    <input type="hidden" id="newDate" name="newDate">
+<!--     <input type="hidden" id="newPublicDate" name="newPublicDate"> -->
+</form>
+
+ <form id="updateForm" method="post">
+    <input type="hidden" id="updateId" name="newId">
+    <input type="hidden" id="updateTitle" name="newTitle">
+    <input type="hidden" id="updatePublisher" name="newPublisher">
+    <input type="hidden" id="updateAuthor" name="newAuthor">
+    <input type="hidden" id="updateYear" name="newYear">
+    <input type="hidden" id="updateMonth" name="newMonth">
+    <input type="hidden" id="updateDate" name="newDate">
+</form>
+
+<form id="searchForm" action="http://localhost:8080/book" method="get">
+    <input type="hidden" id="idToSearch" name="idBook">
+</form>
+
+<form id="deleteForm" method="get">
+    <input type="hidden" id="idToDelete" name="idBook">
+</form>
+
+
+</body>
+</html>

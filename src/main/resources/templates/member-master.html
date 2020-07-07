@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>membermaster</title>
+        <th:block th:insert="~{index :: head/script}"></th:block>
+		<th:block th:insert="~{index :: head/link}"></th:block>
+		<script src="/js/main.js"></script>
+    </head>
+    <body>
+    	<div class="container">
+		   	<th:block  th:insert="~{index :: navbar}"></th:block>
+		   	<div class="col-sm-12" style="display: inline-flex;">
+			   	<h2 class="col-sm-8" style="margin-top: 0px;">会員マスタメンテ</h2>
+				<div class="col-sm-4"style="padding-right: 0px;"><a href="/logout" style="float: right;">ログアウト</a></div>
+		   	</div>
+<!-- --- -->
+			<div class="col-sm-12"><a href="/menu" style="float: right;">戻る</a></div>
+			<h4 th:utext="${msg}"></h4>
+			
+			<form th:object="${memberForm}" id="form">
+			<!-- id search-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員ID：</label>
+				       	<input class="form-control"  th:field="${memberForm.memberId}"/>
+					</div>
+				      	<div class="col-sm-3" style="margin-top:24px;">
+				      		<button id="searchMember" class="btn btn-primary" style="width: 120px">検索</button>
+				      	</div>
+				</div>
+			<!-- family name-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員氏(漢字)：</label>
+			        	<input class="form-control" maxlength=""  th:field="${memberForm.familyName}"/>
+					</div>
+					<div class="col-sm-5">
+						<label>会員氏(カナ)：</label>
+			        	<input class="form-control" maxlength=""  th:field="${memberForm.familyNameKana}"/>
+					</div>
+				</div>
+			<!-- first name-->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-5">
+						<label>会員名(漢字)：</label>
+			        	<input class="form-control" maxlength=""  th:field="${memberForm.firstName}" />
+					</div>
+					<div class="col-sm-5">
+						<label>会員名(カナ)：</label>
+			        	<input class="form-control" maxlength=""  th:field="${memberForm.firstNameKana}" />
+					</div>
+				</div>
+			<!-- address -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-12">
+						<label>住所：</label>
+			        	<input class="form-control" maxlength=""  th:field="${memberForm.address}" />
+					</div>
+				</div>
+			<!-- birthday -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div class="col-sm-12">
+						<label>生年月日(西暦)：</label>
+					<div style="margin-left: -15px">
+						<div class="col-sm-4">
+							<div class="form-inline">
+								<input class="form-control" style="width:140px"  th:field="${memberForm.birthYear}" />
+						          	<span>年</span>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-inline">
+								<input class="form-control" style="width:70px"  th:field="${memberForm.birthMonth}" />
+						          	<span>月</span>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-inline">
+								<input class="form-control" style="width:70px"  th:field="${memberForm.birthDate}" />
+						           	<span>日</span>
+								</div>
+							</div>
+						</div>							
+					</div>
+				</div>
+			<!-- action -->
+				<div class="col-sm-12" style="padding-top: 10px;">
+					<div style="float: right;">
+						<button id="addMember" class="btn btn-primary" style="height: ; width:120px ;">追加</button>
+						<button id="updateMember" class="btn btn-primary" style="height: ; width:120px ;">更新</button>
+						<button id="deleteMember" class="btn btn-primary" style="height: ; width:120px ;">削除</button>
+						<button id="clear" class="btn btn-primary" style="height: ; width:120px ;">クリア</button>
+					</div>
+				</div>
+			</form>
+    	</div>
+    </body>
+	<script type="text/javascript">
+		var msg = "[[${msg}]]";
+	 	if(msg != ""){
+	 		alert(msg);
+	 	}
+	 	
+		function checkInputData(){
+			var msg = '';
+			if($('#memberId').val() == ''){
+				msg += "会員ID を入力してください。";
+			}else{
+				if(checkInputIsAlphanumeric($('#memberId').val()) == false){
+					msg += "\n会員IDは半角英数字で入力してください。";
+				}
+			}
+			if($('#familyName').val() == ''){
+				msg += "\n会員氏(漢字)を入力してください。";
+			}else{
+				if(checkInputIsKanji($('#familyName').val()) == false){
+					msg += "\n会員氏(漢字)は漢字で入力してください。";
+				}
+			}
+			if($('#familyNameKana').val() == ''){
+				msg += "\n会員氏(カナ)を入力してください。";
+			}else{
+				if(checkInputIsKana($('#familyNameKana').val()) == false){
+					msg += "\n会員氏(カナ)はカナ字で入力してください。";
+				}
+			}
+			if($('#firstName').val() == ''){
+				msg += "\n会員名(漢字)を入力してください。";
+			}else{
+				if(checkInputIsKanji($('#firstName').val()) == false){
+					msg += "\n会員氏(漢字)は漢字で入力してください。";
+				}
+			}
+			if($('#firstNameKana').val() == ''){
+				msg += "\n会員名(カナ)を入力してください。";
+			}else{
+				if(checkInputIsKana($('#firstNameKana').val()) == false){
+					msg += "\n会員名(カナ)はカナ字で入力してください。";
+				}
+			}
+			if($('#address').val() == ''){
+				msg += "\n住所を入力してください。";
+			}
+			if($('#birthYear').val() == ''){
+				msg += "\n生年月日(年)を入力してください。";
+			}else{
+				if(checkInputIsNumber($('#birthYear').val()) == false){
+					msg += "\n生年月日(年)は半角数字で入力してください。";
+				}
+			}
+			if($('#birthMonth').val() == ''){
+				msg += "\n生年月日(月)を入力してください。";
+			}else{
+				if(checkInputIsNumber($('#birthMonth').val()) == false){
+					msg += "\n生年月日(月)は半角数字で入力してください。";
+				}
+			}
+			if($('#birthDate').val() == ''){
+				msg += "\n生年月日(日)を入力してください。";
+			}else{
+				if(checkInputIsNumber($('#birthDate').val()) == false){
+					msg += "\n生年月日(日)は半角数字で入力してください。";
+				}
+			}
+
+			if(msg != ''){
+				alert(msg);
+				return false;
+			}
+			return true;
+		}
+
+		
+
+		$(document).ready(function(){
+			$('#addMember').click(function(event){
+				if(checkInputData() == false){
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/addmember/checkdata');
+					$('#form').submit();
+				}
+			});
+			
+			$('#updateMember').click(function(event){
+				if(checkInputData() == false){
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/updatemember/checkdata');
+					$('#form').submit();
+				}
+			});
+			
+			$('#deleteMember').click(function(event){
+				if($('#memberId').val() == ''){
+					alert("会員ID を入力してください。");
+					event.preventDefault();
+				}else if(checkInputIsAlphanumeric($('#memberId').val()) == false){
+					alert("会員IDは半角英数字で入力してください。");
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/deletemember/checkdata');
+					$('#form').submit();
+				}
+			});
+			
+			$('#searchMember').click(function(event){
+				if($('#memberId').val() == ''){
+					alert("会員ID を入力してください。");
+					event.preventDefault();
+				}else if(checkInputIsAlphanumeric($('#memberId').val()) == false){
+					alert("会員IDは半角英数字で入力してください。");
+					event.preventDefault();
+				}else{
+					$('#form').attr('action', '/searchmember');
+					$('#form').submit();
+				}
+			});
+			
+			$('clear').click(function(event){
+				$("#form").reset();
+			});
+		});
+	</script>
+</html>

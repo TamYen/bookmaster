@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>menu</title>
+        <th:block th:insert="~{index :: head/script}"></th:block>
+        <th:block th:insert="~{index :: head/link}"></th:block>
+    </head>
+    <body>
+    	<div class="container">
+		   	<th:block  th:insert="~{index :: navbar}"></th:block>
+		   	<h2 class="col-sm-8" style="margin-top: 0px; margin-bottom: 40px;">ログイン画面</h2>
+			<div class="col-sm-4"><a href="#" style="float: right;">閉じる</a></div>
+			<div class="row" style="margin: 10px">
+				<div class="col-sm-5 text-center" style="margin: 10px">
+					<button id="btnEmp" class="btn btn-primary" style="height: 40px; width: 150px;">会員マスタメンテ</button>
+				</div>
+				<div class="col-sm-5 text-center" style="margin: 10px">
+					<button id="btnLending" class="btn btn-primary" style="height: 40px; width: 150px;">貸出</button>
+				</div>
+			</div>
+			<div class="row" style="margin: 10px">
+				<div class="col-sm-5 text-center" style="margin: 10px">
+					<button id="btnBook" class="btn btn-primary" style="height: 40px; width: 150px;">本マスタメンテ</button>
+				</div>
+				<div class="col-sm-5 text-center" style="margin: 10px">
+					<button id="btnReturn" class="btn btn-primary" style="height: 40px; width: 150px;">返却</button>
+				</div>
+			</div>
+    	</div>
+    </body>
+    <script type="text/javascript">
+    $(document).ready(function(){
+    	$('#btnEmp').click(function(){
+    		window.location = "/membermaster";
+    	});
+    	$('#btnLending').click(function(){
+    		window.location = "/lending";
+    	});
+    	$('#btnBook').click(function(){
+    		window.location = "/bookmaster";
+    	});
+    	$('#btnReturn').click(function(){
+    		window.location = "/bookreturn";
+    	});
+    });
+    </script>
+</html>

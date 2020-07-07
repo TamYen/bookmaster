@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title>logout</title>
+	<th:block th:insert="~{index :: head/script}"></th:block>
+	<th:block th:insert="~{index :: head/link}"></th:block>
+</head>
+<body>
+	<th:block  th:insert="~{index :: navbar}"></th:block>
+	<div class="container">
+	<div class="row">
+		<div class="col-sm-8" ><h2 style="margin-top: 0px;">ログアウト</h2></div>
+		<div class="col-sm-4" ><a href="/login" style="float: right;">ログイン</a></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8"><p style="margin-top: 0px;">ログアウトしました。</p></div>
+	</div>
+	</div>
+</body>
+</html>

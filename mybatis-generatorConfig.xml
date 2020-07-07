@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="context1">
+    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/BookMaster" 
+    				driverClass="org.postgresql.Driver" 
+    				password="123456" userId="postgres" />
+    <javaModelGenerator targetPackage="com.example.orm.model" targetProject="BookMasterApplication/src/main/java" />
+    <sqlMapGenerator targetPackage="com.example.orm.mapper" targetProject="BookMasterApplication/src/main/resources" />
+    <javaClientGenerator targetPackage="com.example.orm.mapper" targetProject="BookMasterApplication/src/main/java" type="XMLMAPPER" />
+<!-- 	<javaClientGenerator targetPackage="com.example.orm.mapper2" targetProject="BookMasterApplication/src/main/resources" type="ANNOTATEDMAPPER" /> -->
+<!-- 	<javaClientGenerator targetPackage="com.example.orm.mapper2" targetProject="BookMasterApplication/src/main/resources" type="MIXEDMAPPER" /> -->
+	
+    <table schema="public" tableName="%">
+    </table>
+<!--     <table schema="public" tableName="user"> -->
+<!--     </table> -->
+<!--     <table schema="public" tableName="role_user"> -->
+<!--     </table> -->
+  </context>
+</generatorConfiguration>
